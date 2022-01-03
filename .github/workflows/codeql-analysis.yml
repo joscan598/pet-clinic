@@ -1,0 +1,41 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '36 0 * * 3'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'java' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+    
+    - name: Install JDK 17
+      run: sudo add-apt-repository ppa:linuxuprising/java && sudo apt update && echo debconf shared/accepted-oracle-license-v1-3 select true | sudo debconf-set-selections && echo debconf shared/accepted-oracle-license-v1-3 seen true | sudo debconf-set-selections && sudo apt-get -y install oracle-java17-installer --install-recommends && java --version && javac -version
+      
+    - name: Build
+      run: export JAVA_HOME=/usr/lib/jvm/java-17-oracle && echo $JAVA_HOME && java --version && javac -version && mvn clean install -e -X
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
