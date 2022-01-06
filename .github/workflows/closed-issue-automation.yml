@@ -1,0 +1,16 @@
+name: "Closed Issue Automation"
+
+on:
+  issues:
+    types: [closed]
+  pull_request:
+    types: [closed]
+
+jobs:
+  automate-issues-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initial labeling
+        uses: andymckay/labeler@master
+        with:
+          remove-labels: "status: completed"
