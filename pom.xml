@@ -59,6 +59,7 @@
                 <configuration>
                     <goals>install</goals>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <signTag>true</signTag>
                 </configuration>
             </plugin>
         </plugins>
